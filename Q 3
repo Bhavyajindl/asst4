@@ -1,81 +1,67 @@
-// student id - 1024030295
+// studentn id - 1024030295
 #include <iostream>
+#include <queue>
 using namespace std;
 
-#define SIZE 100
+void interleaveQueue(queue<int> &q) {
+    int n = q.size();
 
-int q[SIZE];
-int front = -1, rear = -1;
-
-// Enqueue
-void enqueue(int x) {
-    if (rear == SIZE - 1) {
-        cout << "Overflow\n";
+    // Only works if queue has even number of elements
+    if (n % 2 != 0) {
+        cout << "Queue does not have even number of elements!\n";
         return;
-    }
-    if (front == -1 && rear == -1) {
-        front = rear = 0;
-    } else {
-        rear++;
-    }
-    q[rear] = x;
-}
-
-// Dequeue
-int dequeue() {
-    if (front == -1 && rear == -1) {
-        cout << "Underflow\n";
-        return -1;
-    }
-    int val = q[front];
-    if (front == rear) {
-        front = rear = -1;
-    } else {
-        front++;
-    }
-    return val;
-}
-
-// Peek
-int peek() {
-    if (front == -1 && rear == -1) {
-        cout << "Underflow\n";
-        return -1;
-    }
-    return q[front];
-}
-
-// Display
-void display() {
-    if (front == -1 && rear == -1) {
-        cout << "Queue is empty\n";
-        return;
-    }
-    for (int i = front; i <= rear; i++) {
-        cout << q[i] << " ";
-    }
-    cout << "\n";
-}
-
-int main() {
-    int n;
-    cout << "Enter even number of elements: ";
-    cin >> n;
-
-    int arr[n];
-    cout << "Enter " << n << " elements:\n";
-    for (int i = 0; i < n; i++) {
-        cin >> arr[i];
-        enqueue(arr[i]);
     }
 
     int half = n / 2;
+    queue<int> firstHalf;
+
+    // Push first half into another queue
+    for (int i = 0; i < half; i++) {
+        firstHalf.push(q.front());
+        q.pop();
+    }
+
+    // Interleave both halves
+    while (!firstHalf.empty()) {
+        q.push(firstHalf.front()); // take from first half
+        firstHalf.pop();
+
+        q.push(q.front()); // take from second half
+        q.pop();
+    }
+}
+
+int main() {
+    queue<int> q;
+    int n, val;
+
+    cout << "Enter number of elements (even): ";
+    cin >> n;
+
+    cout << "Enter elements:\n";
+    for (int i = 0; i < n; i++) {
+        cin >> val;
+        q.push(val);
+    }
+
+    cout << "Original Queue: ";
+    {
+        queue<int> temp = q;
+        while (!temp.empty()) {
+            cout << temp.front() << " ";
+            temp.pop();
+        }
+        cout << endl;
+    }
+
+    interleaveQueue(q);
 
     cout << "Interleaved Queue: ";
-    for (int i = 0; i < half; i++) {
-        cout << arr[i] << " " << arr[i + half] << " ";
+    while (!q.empty()) {
+        cout << q.front() << " ";
+        q.pop();
     }
-    cout << "\n";
+    cout << endl;
 
     return 0;
 }
