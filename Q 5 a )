@@ -1,0 +1,63 @@
+// Student id - 1024030295
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class StackTwoQueues {
+    queue<int> q1, q2;
+
+public:
+    void push(int x) {
+        // Push into q2
+        q2.push(x);
+
+        // Move all from q1 -> q2
+        while (!q1.empty()) {
+            q2.push(q1.front());
+            q1.pop();
+        }
+
+        // Swap q1 and q2
+        swap(q1, q2);
+    }
+
+    void pop() {
+        if (q1.empty()) {
+            cout << "Stack Underflow!\n";
+            return;
+        }
+        cout << "Popped: " << q1.front() << endl;
+        q1.pop();
+    }
+
+    void top() {
+        if (q1.empty()) {
+            cout << "Stack is empty!\n";
+        } else {
+            cout << "Top element: " << q1.front() << endl;
+        }
+    }
+
+    bool empty() {
+        return q1.empty();
+    }
+};
+int main() {
+    StackTwoQueues s2q;
+    s2q.push(10);
+    s2q.push(20);
+    s2q.top();  // 20
+    s2q.pop();  // pops 20
+    s2q.top();  // 10
+
+    cout << "------\n";
+
+    StackOneQueue s1q;
+    s1q.push(10);
+    s1q.push(20);
+    s1q.top();  // 20
+    s1q.pop();  // pops 20
+    s1q.top();  // 10
+
+    return 0;
+}
